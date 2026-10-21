@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>テスト1 基本埋め込み</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <a href="index.html">← 目次</a>
+  <h1>テスト1：基本埋め込み</h1>
+</header>
+<main>
+  <section class="purpose">
+    <h2>このページで確認すること</h2>
+    <ul>
+      <li>固定600pxの iframe で、表示 → 入力 → 送信 → 完了まで通るか（回答保存は管理画面で確認）。</li>
+      <li>このページを1回表示／再読込／別ブラウザで開いたときに、管理画面のアクセス数がいくつ増えるか。</li>
+      <li>高さ調整・遷移は行いません。届いたメッセージは右下に記録だけします。</li>
+    </ul>
+  </section>
+  <div id="form-slot" class="form-slot"></div>
+  <p class="alt">うまく表示されない・回答できない場合：<a id="alt-link" target="_blank" rel="noopener">フォームを別タブで開く</a></p>
+</main>
+<script src="config.js"></script>
+<script src="log.js"></script>
+<script src="common.js"></script>
+<script>
+(function () {
+  var T = window.AskOneTest;
+  var iframe = T.mountIframe({ container: "form-slot", height: 600 });
+  if (iframe) T.listen(iframe, {}, !0);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ask One iframe 検証</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <h1>Ask One iframe 埋め込み 検証ページ</h1>
+</header>
+<main>
+  <section class="purpose">
+    <h2>このサイトについて</h2>
+    <ul>
+      <li>Ask One の公開フォームを1段の iframe で埋め込んだときの挙動を確認するための検証ページです。</li>
+      <li>手順と記録欄は README.md / CHECKLIST.md を参照してください。</li>
+    </ul>
+  </section>
+
+  <h2>テストページ</h2>
+  <ul class="cards">
+    <li><a href="basic.html"><b>テスト1：基本埋め込み</b><span>固定600px・JS制御なし。表示→入力→送信→完了、アクセス数の増え方</span></a></li>
+    <li><a href="auto-height.html"><b>テスト2：高さ自動調整</b><span>フォームからの高さ通知（postMessage）で iframe の高さを追従</span></a></li>
+    <li><a href="complete.html"><b>テスト3：完了通知 → 親ページ遷移</b><span>完了ステップの通知で親ページ全体を thanks.html へ</span></a></li>
+    <li><a id="utm-link" href="utm.html?utm_source=test&amp;utm_campaign=x&amp;foo=bar"><b>テスト4：UTM引き継ぎ</b><span>?utm_source=test&amp;utm_campaign=x&amp;foo=bar 付きで開きます</span></a></li>
+  </ul>
+
+  <h2>現在の設定（config.js）</h2>
+  <table class="kv">
+    <tr><th>フォームURL</th><td id="cfg-form"></td></tr>
+    <tr><th>フォームの origin</th><td id="cfg-form-origin"></td></tr>
+    <tr><th>このサイトの origin</th><td><code id="cfg-self-origin"></code><br><small>Ask One 側スニペットの PARENT_ORIGIN にはこの値を入れます（パスは含めない）</small></td></tr>
+    <tr><th>完了後の遷移先</th><td id="cfg-thanks"></td></tr>
+    <tr><th>引き継ぐキー</th><td id="cfg-utm"></td></tr>
+    <tr><th>変数名の対応表</th><td id="cfg-map"></td></tr>
+    <tr><th>高さ</th><td id="cfg-height"></td></tr>
+  </table>
+</main>
+<script src="config.js"></script>
+<script src="log.js"></script>
+<script src="common.js"></script>
+<script>
+(function () {
+  var T = window.AskOneTest, C = T.config, u = T.formUrl();
+  function set(id, html) { document.getElementById(id).innerHTML = html; }
+  function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+  set("cfg-form", u ? "<code>" + esc(String(u)) + "</code>" : '<span class="tag ng">未設定</span> config.js の FORM_URL を書き換えてください');
+  set("cfg-form-origin", u ? "<code>" + esc(u.origin) + "</code>" : "—");
+  document.getElementById("cfg-self-origin").textContent = location.origin;
+  set("cfg-thanks", "<code>" + esc(new URL(C.THANKS_URL, location.href).href) + "</code>");
+  set("cfg-utm", "<code>" + esc(C.UTM_KEYS.join(", ")) + "</code>");
+  var map = Object.keys(C.UTM_PARAM_MAP || {});
+  set("cfg-map", map.length ? map.map(function (k) { return "<code>" + esc(k) + " → " + esc(C.UTM_PARAM_MAP[k]) + "</code>"; }).join("<br>") : "なし（UTMキー名のまま渡す）");
+  set("cfg-height", "初期 " + C.FALLBACK_HEIGHT + "px／受付範囲 " + C.HEIGHT_MIN + "〜" + C.HEIGHT_MAX + "px");
+})();
+</script>
+</body>
+</html>

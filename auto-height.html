@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>テスト2 高さ自動調整</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <a href="index.html">← 目次</a>
+  <h1>テスト2：高さ自動調整</h1>
+</header>
+<main>
+  <section class="purpose">
+    <h2>このページで確認すること</h2>
+    <ul>
+      <li>STEPの切り替え・エラー表示・画面回転で iframe の高さが追従するか（伸び続け・縮まない・二重スクロールがないか）。</li>
+      <li>STEPを何度も行き来しても、右下ログの「処理」行が異常に増えないか。</li>
+      <li>高さ通知が届かない場合は 600px のままになります。</li>
+    </ul>
+  </section>
+  <div id="form-slot" class="form-slot"></div>
+  <p class="alt">うまく表示されない・回答できない場合：<a id="alt-link" target="_blank" rel="noopener">フォームを別タブで開く</a></p>
+</main>
+<script src="config.js"></script>
+<script src="log.js"></script>
+<script src="common.js"></script>
+<script>
+(function () {
+  var T = window.AskOneTest;
+  var iframe = T.mountIframe({ container: "form-slot" });
+  if (!iframe) return;
+  T.listen(iframe, { iframeHeight: T.heightHandler(iframe) });
+})();
+</script>
+</body>
+</html>

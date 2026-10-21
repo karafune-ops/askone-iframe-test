@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>テスト4 UTM引き継ぎ</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <a href="index.html">← 目次</a>
+  <h1>テスト4：UTM引き継ぎ</h1>
+</header>
+<main>
+  <section class="purpose">
+    <h2>このページで確認すること</h2>
+    <ul>
+      <li>親ページURLの UTM パラメータだけが iframe の src に付き、それ以外（例: foo）は付かないか。</li>
+      <li>回答後、Ask One の回答データ（CSV）に UTM の値が記録されているか。</li>
+      <li><a href="utm.html?utm_source=test&amp;utm_campaign=x&amp;foo=bar">?utm_source=test&amp;utm_campaign=x&amp;foo=bar 付きで開き直す</a></li>
+    </ul>
+  </section>
+  <table class="kv" style="margin-bottom:16px">
+    <tr><th>親ページのクエリ</th><td id="utm-parent"></td></tr>
+    <tr><th>引き継いだ</th><td id="utm-passed"></td></tr>
+    <tr><th>渡さなかった</th><td id="utm-dropped"></td></tr>
+    <tr><th>iframe の src</th><td id="utm-src"></td></tr>
+  </table>
+  <div id="form-slot" class="form-slot"></div>
+  <p class="alt">うまく表示されない・回答できない場合：<a id="alt-link" target="_blank" rel="noopener">フォームを別タブで開く</a></p>
+</main>
+<script src="config.js"></script>
+<script src="log.js"></script>
+<script src="common.js"></script>
+<script>
+(function () {
+  var T = window.AskOneTest, C = T.config;
+  var MAX_VALUE_LENGTH = 200;
+  function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+  function code(s) { return "<code>" + esc(s) + "</code>"; }
+  function set(id, html) { document.getElementById(id).innerHTML = html; }
+
+  var parent = new URLSearchParams(location.search);
+  set("utm-parent", location.search ? code(location.search) : "（なし）");
+
+  var base = T.formUrl();
+  var passed = [], dropped = [];
+  var src = base ? new URL(String(base)) : null;
+  parent.forEach(function (value, key) {
+    if (C.UTM_KEYS.indexOf(key) < 0) return dropped.push(key + "（許可リスト外）");
+    if (!value) return dropped.push(key + "（値が空）");
+    if (value.length > MAX_VALUE_LENGTH) return dropped.push(key + "（値が長すぎる）");
+    var name = (C.UTM_PARAM_MAP && C.UTM_PARAM_MAP[key]) || key;
+    if (name.indexOf("___s") >= 0) return dropped.push(key + "（変数名に ___s を含むため記録不可）");
+    if (src) src.searchParams.set(name, value);
+    passed.push(name === key ? key + "=" + value : key + " → " + name + "=" + value);
+  });
+  set("utm-passed", passed.length ? passed.map(code).join("<br>") : "（なし）");
+  set("utm-dropped", dropped.length ? dropped.map(code).join("<br>") : "（なし）");
+  set("utm-src", src ? code(src.href) : "（フォームURL未設定）");
+
+  var iframe = T.mountIframe({ container: "form-slot", src: src });
+  if (!iframe) return;
+  T.listen(iframe, { iframeHeight: T.heightHandler(iframe) });
+})();
+</script>
+</body>
+</html>

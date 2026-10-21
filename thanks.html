@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>サンクスページ</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <a href="index.html">← 目次</a>
+  <h1>サンクスページ</h1>
+</header>
+<main>
+  <section class="purpose">
+    <h2>結果</h2>
+    <p style="margin:0">親ページのサンクスページに遷移しました。</p>
+    <p id="came-from" style="margin:0;color:var(--muted);font-size:13px"></p>
+  </section>
+  <p><a href="complete.html">テスト3に戻る</a></p>
+</main>
+<script>
+(function () {
+  var at = null;
+  try { at = sessionStorage.getItem("askoneCompleteAt"); sessionStorage.removeItem("askoneCompleteAt"); } catch (e) {}
+  if (at) document.getElementById("came-from").textContent = "complete.html が完了通知を受信した時刻: " + new Date(at).toLocaleString("ja-JP");
+})();
+</script>
+</body>
+</html>

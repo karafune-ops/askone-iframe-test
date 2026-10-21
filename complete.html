@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>テスト3 完了通知</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <a href="index.html">← 目次</a>
+  <h1>テスト3：完了通知 → 親ページ遷移</h1>
+</header>
+<main>
+  <section class="purpose">
+    <h2>このページで確認すること</h2>
+    <ul>
+      <li>送信完了で、親ページ全体が thanks.html に1回だけ遷移するか（管理画面の回答保存と突き合わせる）。</li>
+      <li>送信エラー・戻る・再読込では遷移しないか。</li>
+      <li>遷移先は親ページ側で固定です（メッセージ内のURLは使いません）。</li>
+    </ul>
+  </section>
+  <div id="form-slot" class="form-slot"></div>
+  <p class="alt">うまく表示されない・回答できない場合：<a id="alt-link" target="_blank" rel="noopener">フォームを別タブで開く</a></p>
+</main>
+<script src="config.js"></script>
+<script src="log.js"></script>
+<script src="common.js"></script>
+<script>
+(function () {
+  var T = window.AskOneTest;
+  var iframe = T.mountIframe({ container: "form-slot" });
+  if (!iframe) return;
+  var thanks = new URL(T.config.THANKS_URL, location.href);
+  var navigated = !1;
+  T.listen(iframe, {
+    iframeHeight: T.heightHandler(iframe),
+    askoneComplete: function () {
+      if (navigated) return { ok: !1, reason: "遷移済みのため無視（二重遷移防止）" };
+      if (thanks.origin !== location.origin) return { ok: !1, reason: "THANKS_URL が同一サイトではないため遷移しない" };
+      navigated = !0;
+      try { sessionStorage.setItem("askoneCompleteAt", new Date().toISOString()); } catch (e) {}
+      setTimeout(function () { window.location.assign(thanks.href); }, 0);
+      return { ok: !0, reason: thanks.pathname + " へ遷移" };
+    }
+  });
+})();
+</script>
+</body>
+</html>
