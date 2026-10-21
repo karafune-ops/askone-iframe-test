@@ -4,7 +4,7 @@
  */
 window.ASKONE_TEST_CONFIG = {
   // Ask One 検証用フォームの「回答用」公開URL（管理画面のURLではない）
-  FORM_URL: "REPLACE_WITH_PUBLIC_FORM_URL",
+  FORM_URL: "https://help.ninout.ai/ng/answers/75d4e3b5cccfdf120f9283545f1004/",
 
   // 完了通知を受けたときに親ページ全体を遷移させる先（同一サイト内に固定）
   THANKS_URL: "thanks.html",
