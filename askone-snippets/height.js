@@ -16,8 +16,23 @@
   var lastHeight = -1;
   var scheduled = !1;
 
-  // 画面の高さに張り付く要素（固定配置）を除いた、中身の下端までの高さ
+  // Ask One の回答画面は .stage が画面の高さ（min-height）に張り付くため、中身の .stage__inner の下端を測り、
+  // 画面下に固定表示される送信フッター（.submit）の高さを足す
+  function measureAskOne() {
+    var inner = document.querySelector(".stage__inner");
+    if (!inner) return 0;
+    var bottom = inner.getBoundingClientRect().bottom + window.pageYOffset;
+    var submit = document.querySelector(".submit");
+    if (submit && window.getComputedStyle(submit).position === "fixed") {
+      bottom += submit.getBoundingClientRect().height;
+    }
+    return Math.ceil(bottom + 16);
+  }
+
+  // 画面の高さに張り付く要素（固定配置）を除いた、中身の下端までの高さ（Ask One の構造が見つからないときの予備）
   function measure() {
+    var askOne = measureAskOne();
+    if (askOne) return askOne;
     var body = document.body;
     if (!body) return 0;
     var bottom = 0;
