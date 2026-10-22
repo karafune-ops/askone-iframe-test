@@ -10,6 +10,7 @@ Ask One（ninout.ai）の公開フォームを外部サイトに **1段の ifram
 | `auto-height.html` | テスト2：高さ自動調整（フォーム → 親への postMessage） |
 | `complete.html` | テスト3：完了通知で親ページ全体を `thanks.html` へ遷移 |
 | `utm.html` | テスト4：親URLの UTM を iframe の src へ引き継ぐ |
+| `direct.html` | テスト5：JSを一切使わず iframe タグを直書きした版（高さ800px固定）。フォームURLはこのファイルに直接書いてあり、`config.js` は使わない |
 | `thanks.html` | 親ページの遷移先 |
 
 共通ファイル：`config.js`（設定）／`log.js`（右下の受信ログ）／`common.js`（iframe 組み立て・メッセージ検証）／`style.css`
@@ -84,6 +85,10 @@ FORM_URL: "REPLACE_WITH_PUBLIC_FORM_URL",   // ← 回答用の公開URLに置�
 `?utm_source=test&utm_campaign=x&foo=bar` のように開くと、`config.js` の許可リストにあるキーだけをフォームURLに付けます。
 親URLのクエリを丸ごと転送はしません。画面上部に「引き継いだ／渡さなかった／最終的な src」を表示します。
 目次からのリンクは上記クエリ付きで開きます。
+
+### direct.html
+JavaScript を一切読み込まないページです。貼り付けるコードは iframe タグ1つだけです。
+フォームURLを変えたときは、`config.js` とは別に、このファイルの `src` と「別タブで開く」リンクの2か所も書き換えてください。
 
 ## 5. 既知の制約（検証の前提）
 

@@ -33,6 +33,7 @@
 | 7 | utm | `?utm_source=test&utm_campaign=x&foo=bar` で開く | src に utm のみ付与、foo は付かない。CSVに値が記録 |
 | 8 | 全般 | iPhone Safari／Mac Safari／Chrome（サードパーティCookieブロック）／シークレット | 回答可否・エラー表示を記録 |
 | 9 | 全般 | 途中離脱→同ブラウザで再訪 | 途中から再開できるかを記録 |
+| 10 | direct | JSなしの直接埋め込みで 表示→入力→送信→完了 | 完了画面が iframe 内に表示、管理画面に回答1件保存（basic と結果が同じか） |
 
 ### 確認時のヒント
 
